@@ -1,0 +1,114 @@
+@import './base.css';
+
+.nav__item {
+  border-bottom: 1.5px solid transparent;
+  transition:
+    color 0.3s,
+    border-color 0.3s;
+}
+
+
+.nav__item:hover:not(:focus-visible) {
+  color: var(--content-active);
+}
+
+/* SOCIALS LINKS */
+.socials__link {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  transition: border-color 0.3s;
+}
+
+.socials__link path {
+  transition: fill 0.3s;
+}
+
+.socials__link:hover:not(:focus-visible) {
+  border-color: var(--background-brand-hovered);
+}
+
+.socials__link:hover:not(:focus-visible) path {
+  fill: var(--background-brand-hovered);
+}
+.socials__link:active:not(:focus-visible) {
+  border-color: var(--background-brand-active);
+}
+
+.socials__link:active:not(:focus-visible) path {
+  fill: var(--background-brand-active);
+}
+
+/* Лейба рейтинга */
+.rating-gold {
+  background-color: #a59400;
+}
+
+.rating-green {
+  background-color: #308e21;
+}
+
+.rating-gray {
+  background-color: #777;
+}
+
+.rating-red {
+  background-color: #c82020;
+}
+.link-active {
+  position: relative;
+}
+.link-active:after {
+  content: '';
+  display: block;
+  position: absolute;
+  height: 1.5px;
+  width: 100%;
+  top: 30px;
+  background-color: #dc5dfc;
+}
+
+.btn-close {
+  padding: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  z-index: 10;
+  right: -68px;
+  border-radius: 24px;
+  background: var(--background-white);
+}
+
+/* Эффекты кнопок отдельного фильма */
+.custom-movie-btn path {
+  transition: fill 0.3s, color 0.3s;
+}
+.custom-movie-btn {
+  transition: color 0.3s;
+}
+
+.custom-movie-btn:hover:not(:focus-visible) path {
+  fill: var(--background-brand-hovered);
+  color: var(--background-brand-hovered);
+}
+
+.custom-movie-btn:active:not(:focus-visible) path {
+  fill: var(--background-brand-active);
+  color: var(--background-brand-active);
+}
+.custom-movie-btn:hover:not(:focus-visible) {
+
+  color: var(--background-brand-hovered);
+}
+
+.custom-movie-btn:active:not(:focus-visible) {
+  fill: var(--background-brand-active);
+  color: var(--background-brand-active);
+}
+.modal-container body {
+  overflow: hidden;
+}
