@@ -1,29 +1,26 @@
 <template>
   <div class="genres">
     <div class="genres-container container">
-      <RouterView v-if="store.isGenreOpened" />
-      <div class="genres__content" v-else>
-        <h2 class="genres__title">Жанры фильмов</h2>
-        <ul class="genres__list flex list-reset">
-          <li
-            class="genres__item"
-            v-for="genre of genresPicture"
-            :key="genre"
-            :style="{ backgroundImage: `url(${Object.values(genre)[0]})` }"
-          >
-            <router-link
-              :to="{ name: 'genre', params: { genre: Object.keys(genre)[0] } }"
-              class="genres__link"
-              @click="openGenreView"
-            >
-              <h3 class="genre__title title">{{ Object.keys(genre)[0] }}</h3>
-            </router-link>
-          </li>
-        </ul>
-      </div>
+      <!-- <Transition name="page-opacity"> -->
+        <div class="genres__content" v-if="!store.isGenreOpened">
+          <h2 class="genres__title">Жанры фильмов</h2>
+          <TransitionGroup tag="ul" name="page-opacity" class="genres__list flex list-reset">
+            <li class="genres__item" v-for="genre of genresPicture" :key="genre"
+              :style="{ backgroundImage: `url(${Object.values(genre)[0]})` }">
+              <router-link :to="{ name: 'genre', params: { genre: Object.keys(genre)[0] } }" class="genres__link"
+                @click="openGenreView">
+                <h3 class="genre__title title">{{ Object.keys(genre)[0] }}</h3>
+              </router-link>
+            </li>
+          </TransitionGroup>
+        </div>
+        <RouterView v-else />
+      <!-- </Transition> -->
     </div>
   </div>
 </template>
+
+
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onMounted } from 'vue'
@@ -122,5 +119,13 @@ function openGenreView(gen: string): void {
   left: 0;
   right: 0;
   bottom: 0;
+}
+@media (max-width: 700px) {
+  .genres {
+    padding-top: 80px;
+  }
+  .genres__title {
+    font-size: 24px;
+  }
 }
 </style>

@@ -19,7 +19,7 @@ export const useAppStore = defineStore('global-store', () => {
     isOpenedMovie.value = true;
 }
 
-
+  const clientWidth = document.documentElement.clientWidth;
 
   // Открываем модальное окно
   const isModalOpen = ref<boolean>(false)
@@ -78,6 +78,7 @@ export const useAppStore = defineStore('global-store', () => {
         "Content-Type": "application/json",
       }
     })
+    showAcc()
   }
 
   async function removeFavorite(id:number) {
@@ -85,7 +86,7 @@ export const useAppStore = defineStore('global-store', () => {
       method: 'DELETE',
       credentials: 'include'
     })
-
+    showAcc()
   }
 
   async function closeAccount() {
@@ -103,6 +104,6 @@ export const useAppStore = defineStore('global-store', () => {
 
   return { isGenreOpened, activeMovie, openMovie, isOpenedMovie, isModalOpen, isTrailerOpen, modalType, authError,
     currentUser,  isAuthorised, openModal, closeModal, modalSecondPress, showAcc, addFavorite,
-     removeFavorite, closeAccount
+     removeFavorite, closeAccount, clientWidth
      }
 })

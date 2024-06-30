@@ -1,5 +1,5 @@
 <template>
-  <div class="settings flex">
+  <TransitionGroup tag="div" class="settings flex" name="settings">
     <ul class="settings__list list-reset flex">
       <li class="settings__item name ">
         <span class="settings__icon settings__initials">{{ store.currentUser?.name.slice(0, 1) +
@@ -21,7 +21,7 @@
       </li>
     </ul>
     <button class="close-acc-btn btn" @click='store.closeAccount(), toMain()'>Выйти из аккаунта</button>
-  </div>
+  </TransitionGroup>
 </template>
 
 <script setup lang="ts">
@@ -100,5 +100,13 @@ function toMain() {
       line-height: 133%;
       color: var(--content-primary);
     }
-
+    .settings-enter-active,
+    .settings-leave-active {
+      transition: all 0.5s ease;
+    }
+  .settings-enter-from,
+  .settings-leave-to {
+    opacity: 1;
+    transform: translateX(30px);
+  }
 </style>

@@ -3,14 +3,14 @@
     <div class="auth flex">
       <main-logo width="180" height="36"></main-logo>
       <button-close class="btn-close" @click="store.closeModal(), resetValidator()"></button-close>
-      <form id="authForm" name="authForm" class="auth__form flex" @submit.prevent="authSend()">
+      <TransitionGroup tag="form" id="authForm" name="authForm" class="auth__form flex" @submit.prevent="authSend()">
         <h3 class="auth__title title" v-if="store.modalType !== 'login'">
           Регистрация <span v-if="store.modalType === 'success'"> завершена</span>
         </h3>
         <p class="auth__success-text text" v-if="store.modalType === 'success'">
           Используйте вашу электронную почту для входа
         </p>
-        <div class="auth__inputs flex">
+        <TransitionGroup tag="div" class="auth__inputs flex" name="inputs">
           <input type="text" :class="{ 'is-invalid': v$.inputMail.$errors.length && store.modalType === 'register' }"
             class="auth__mail auth__input" v-if="store.modalType !== 'success'" v-model="v$.inputMail.$model"
             placeholder="Электронная почта" />
@@ -25,7 +25,7 @@
           <input type="password" class="auth__password-conf auth__input"
             :class="{ 'is-invalid': v$.inputPasswordConf.$errors.length }" placeholder="Подтвердите пароль"
             v-model="v$.inputPasswordConf.$model" v-if="store.modalType === 'register'" />
-        </div>
+        </TransitionGroup>
         <p class="auth-error" v-if="store.modalType === 'login' && store.authError">
           Введите правильные данные или зарегистрируйтесь
         </p>
@@ -36,7 +36,7 @@
           @click="store.modalSecondPress(), resetValidator()">
           {{ store.modalType === 'register' ? 'У меня есть пароль' : 'Регистрация' }}
         </button>
-      </form>
+      </TransitionGroup>
     </div>
   </div>
 </template>
@@ -237,5 +237,30 @@ function resetValidator() {
   color: #ff7575;
   text-align: center;
 }
+
+
+.authForm-enter-active,
+.authForm-leave-active {
+  transition: all 0.5s ease;
+}
+
+.authForm-enter-from,
+.authForm-leave-to {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.inputs-enter-active,
+.inputs-leave-active {
+  transition: all 0.5s ease;
+}
+
+.inputs-enter-from,
+.inputs-leave-to {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+
 
 </style>

@@ -5,7 +5,7 @@
       <h2 class="genre__title title">{{ route.params.genre }}</h2>
     </div>
     <movies-list :moviesList="moviesByGenre"></movies-list>
-    <button class="btn genre__btn-more">Показать еще</button>
+    <button class="btn genre__btn-more" @click="loadNextPage">Показать еще</button>
   </div>
 </template>
 
@@ -25,13 +25,14 @@ const route = useRoute()
 const router = useRouter()
 const store = useAppStore()
 
+const pageNumber = ref<number>(1)
 
 
-const moviesByGenre = ref<IMovie[] | null>(null)
+const moviesByGenre = ref<IMovie[]>([])
 
 onMounted(async () => {
     moviesByGenre.value = await getMoviesList(
-    'https://cinemaguide.skillbox.cc/movie' + '?genre=' + route.params.genre
+    'https://cinemaguide.skillbox.cc/movie' + '?genre=' + route.params.genre + '&count=10' + `&page=${pageNumber.value}`
   )
 })
 
@@ -41,7 +42,20 @@ function backGenresPage() {
     router.push('/genres')
 }
 
+async function loadNextPage() {
+  ++pageNumber.value
+  const nextTen = await getMoviesList(
+    'https://cinemaguide.skillbox.cc/movie' + '?genre=' + route.params.genre + `&page=${pageNumber.value}` + '&count=10'
+  )
+  moviesByGenre.value = [...moviesByGenre.value, ...nextTen]
+  console.log(moviesByGenre.value);
+  console.log(nextTen);
+}
+
+
 const emit = defineEmits(['click-back-genres'])
+
+
 
 </script>
 
@@ -77,5 +91,12 @@ const emit = defineEmits(['click-back-genres'])
     border-radius: 28px;
     color: var(--content-primary);
     align-self: center;
+}
+
+@media (max-width: 700px) {
+  .genre__title {
+    font-size: 24px;
+  }
+  
 }
 </style>

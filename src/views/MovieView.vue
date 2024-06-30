@@ -1,47 +1,50 @@
 <template>
-    <div class="movie-card">
-        <customMovie :customMovie="store.activeMovie"></customMovie>
-        <div class="container about-container">
-            <h2 class="movie-card__title title">
-                О фильме
-            </h2>
-            <ul class="movie-card__about about flex list-reset">
-                <li class="about__item">
-                    <dt class="about__term">Язык&nbsp;оригинала</dt>
-                    <dd class="about__description">{{ store.activeMovie?.language }}</dd>
-                </li>
-                <li class="about__item" v-if="store.activeMovie?.budget">
-                    <dt class="about__term">Бюджет</dt>
-                    <dd class="about__description">{{ store.activeMovie?.budget }}</dd>
-                </li>
-                <li class="about__item" v-if="store.activeMovie?.revenue">
-                    <dt class="about__term">Выручка</dt>
-                    <dd class="about__description">{{ store.activeMovie?.revenue }}</dd>
-                </li>
-                <li class="about__item" v-if="store.activeMovie?.director">
-                    <dt class="about__term">Режиссёр</dt>
-                    <dd class="about__description">{{ store.activeMovie?.director }}</dd>
-                </li>
-                <li class="about__item" v-if="store.activeMovie?.production">
-                    <dt class="about__term">Продакшен</dt>
-                    <dd class="about__description">{{ store.activeMovie?.production }}</dd>
-                </li>
-                <li class="about__item" v-if="store.activeMovie?.awardsSummary">
-                    <dt class="about__term">Награды</dt>
-                    <dd class="about__description">{{ store.activeMovie?.awardsSummary }}</dd>
-                </li>
-            </ul>
-        </div>
+  <div class="movie-card">
+    <customMovie :customMovie="store.activeMovie"></customMovie>
+    <div class="container about-container">
+      <h2 class="movie-card__title title">
+        О фильме
+      </h2>
+      <ul class="movie-card__about about flex list-reset">
+        <li class="about__item">
+          <dt class="about__term">Язык&nbsp;оригинала</dt>
+          <dd class="about__description">{{ LangOfMovie }}</dd>
+
+        </li>
+        <li class="about__item" v-if="store.activeMovie?.budget">
+          <dt class="about__term">Бюджет</dt>
+          <dd class="about__description">{{ store.activeMovie?.budget }}</dd>
+        </li>
+        <li class="about__item" v-if="store.activeMovie?.revenue">
+          <dt class="about__term">Выручка</dt>
+          <dd class="about__description">{{ store.activeMovie?.revenue }}</dd>
+        </li>
+        <li class="about__item" v-if="store.activeMovie?.director">
+          <dt class="about__term">Режиссёр</dt>
+          <dd class="about__description">{{ store.activeMovie?.director }}</dd>
+        </li>
+        <li class="about__item" v-if="store.activeMovie?.production">
+          <dt class="about__term">Продакшен</dt>
+          <dd class="about__description">{{ store.activeMovie?.production }}</dd>
+        </li>
+        <li class="about__item" v-if="store.activeMovie?.awardsSummary">
+          <dt class="about__term">Награды</dt>
+          <dd class="about__description">{{ store.activeMovie?.awardsSummary }}</dd>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import  CustomMovie  from '../components/CustomMovie.vue'
 import { useAppStore } from '../stores/globalStore';
 
 const store = useAppStore()
-
+const LangOfMovie = new Intl.DisplayNames("ru", { type: "language" }).of(`${store.activeMovie?.language}`)
+console.log(LangOfMovie);
 
 </script>
 

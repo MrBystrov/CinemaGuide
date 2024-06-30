@@ -121,3 +121,15 @@
     </defs>
   </svg>
 </template>
+
+<style scoped>
+@media(max-width: 1000px) {
+  svg {
+    width: 136px;
+    height: 18px;
+  }
+}
+
+</style>
+
+

@@ -14,4 +14,5 @@ export interface IMovie {
     production: string,
     awardsSummary: string
     revenue: number
+    trailerYouTubeId: 'string'
 }

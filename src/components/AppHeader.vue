@@ -1,84 +1,111 @@
 <template>
   <header class="header ">
     <div class="container header__container flex">
-      <router-link to="/main" class="header__logo">
+      <router-link to="/main" class="header__logo" v-if="!isSearchShow">
         <header-logo></header-logo>
       </router-link>
       <nav class="header__nav nav flex">
-        <ul class="nav__list list-reset flex">
+        <ul class="nav__list list-reset flex" v-if="!isSearchShow">
           <li class="nav__item">
-            <router-link activeClass='link-active' to="/main">Главная</router-link>
+            <router-link activeClass='link-active' to="/main" v-if="width > 1100">Главная</router-link>
           </li>
           <li class="nav__item">
-            <router-link activeClass='link-active' to="/genres" @click="openGenresView">Жанры</router-link>
+            <router-link activeClass='link-active' to="/genres" @click="openGenresView">
+              <span v-if="width > 1100">Жанры</span>
+              <icon-genres v-else></icon-genres>
+            </router-link>
           </li>
         </ul>
-        <input id="nav-search" type="search" class="nav__search" placeholder="Поиск" v-model="searchValue"
-          @input="emit('filter-input', searchValue)">
+        <div class="search-group" :class="{'search-group-open': isSearchShow}">
+
+          <input ref="inputField" id="nav-search" type="search" class="nav__search" placeholder="Поиск"
+            v-model="searchValue" @input="emit('filter-input', searchValue)"
+            v-if="width > 1100 || isSearchShow === true"  >
+          <button-search v-else class="btn" @click="searchShow"></button-search>
+
+
+          <div class="filtred-modal" v-if="searchValue">
+            <div class="filtred-container" >
+              <div class="not-found" v-if="!filtredMovies?.length">Ничего не нашлось</div>
+              <ul class="filtred__list list-reset" name="filtred" v-else>
+                <li class="filtred__item flex" v-for="movie of filtredMovies?.slice(0, 5)" :key="movie.id">
+                  <router-link :to="{ name: 'movie', params: { id: movie.id } }" class="filtred__link flex"
+                    @click="openMovie(movie)">
+                    <img :src="movie.posterUrl" alt="" class="filtred__img">
+                    <div class="filtred__info info flex">
+                      <ul class="filtred__info-top list-reset flex">
+                        <li class="filtred__top-rating flex" :class="{
+                            'rating-gold': movie.tmdbRating > 8,
+                            'rating-green': movie.tmdbRating < 8 && movie.tmdbRating >= 7,
+                            'rating-gray': movie.tmdbRating < 7 && movie.tmdbRating >= 5,
+                            'rating-red': movie.tmdbRating < 5,
+                          }">
+                          <rating-star width="10"></rating-star>
+                          <span>{{ movie.tmdbRating.toFixed(1) }}</span>
+                        </li>
+                        <li class="filtred__top-year">{{ movie.releaseYear }}</li>
+                        <ul class="filtred__top-genres list-reset flex">
+                          <li class="filtred__top-genre" v-for="genre in movie.genres.slice(0, 3)" :key="genre">{{
+                            genre
+                            }}&nbsp;</li>
+                        </ul>
+                        <li class="filtred__top-duration">{{ corecteDuration(movie.runtime) }}</li>
+                      </ul>
+                      <h3 class="filtred__title title">{{ movie.title }}</h3>
+                    </div>
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
         <button id="btn-clear-search" class="btn btn-clear-search" v-if="searchValue" @click="clearSearch">
           <button-clear></button-clear>
         </button>
-        <div class="filtred-modal" v-if="searchValue">
-          <ul class="filtred__list list-reset">
-            <li class="filtred__item flex" v-for="movie of filtredMovies?.slice(0, 5)" :key="movie.id">
-              <router-link :to="{ name: 'movie', params: { id: movie.id } }" class="filtred__link flex"
-                @click="openMovie(movie)">
-                <img :src="movie.posterUrl" alt="" class="filtred__img">
-                <div class="filtred__info info flex">
-                  <ul class="filtred__info-top list-reset flex">
-                    <li class="filtred__top-rating flex" :class="{
-                      'rating-gold': movie.tmdbRating > 8,
-                      'rating-green': movie.tmdbRating < 8 && movie.tmdbRating >= 7,
-                      'rating-gray': movie.tmdbRating < 7 && movie.tmdbRating >= 5,
-                      'rating-red': movie.tmdbRating < 5,
-                    }">
-                      <rating-star width="10"></rating-star>
-                      <span>{{ movie.tmdbRating.toFixed(1) }}</span>
-                    </li>
-                    <li class="filtred__top-year">{{ movie.releaseYear }}</li>
-                    <ul class="filtred__top-genres list-reset flex">
-                      <li class="filtred__top-genre" v-for="genre in movie.genres.slice(0, 3)" :key="genre">{{ genre
-                        }}&nbsp;</li>
-                    </ul>
-                    <li class="filtred__top-duration">{{ corecteDuration(movie.runtime) }}</li>
-                  </ul>
-                  <h3 class="filtred__title title">{{ movie.title }}</h3>
-                </div>
 
-              </router-link>
-            </li>
-          </ul>
-        </div>
       </nav>
       <router-link activeClass='link-active' :to="{ name: 'account'}" class="auth-btn nav__item btn"
-        v-if="store.isAuthorised">{{
-        store.isAuthorised ? store.currentUser?.name
-        : 'Войти' }}</router-link>
-      <button class="auth-btn nav__item btn" @click="store.openModal()" v-else>Войти</button>
+        v-if="store.isAuthorised && !isSearchShow">
+        <span v-if=" width> 1000">{{store.isAuthorised ? store.currentUser?.name : 'Войти'
+          }}</span>
+        <account-icon v-else></account-icon>
+      </router-link>
+      <button :class="{ 'visually-hidden': isSearchShow}" class="auth-btn nav__item btn" @click="store.openModal()"
+        v-else>
+        <span v-if="width > 1000">Войти</span>
+        <account-icon v-else></account-icon>
+      </button>
     </div>
   </header>
 </template>
 
 
 <script setup lang="ts">
-  import {computed, ref} from 'vue'
-  // import { useRoute } from 'vue-router'
+  import {onMounted, ref} from 'vue'
   import HeaderLogo from '../components/icons/MainLogo.vue'
   import ButtonClear from '../components/icons/ButtonClear.vue'
   import { RouterLink } from 'vue-router'
   import type { IMovie } from '../types/IMovie'
-  import { onMounted } from 'vue'
   import RatingStar from './icons/RatingStar.vue'
   import corecteDuration from '../api/correctedTime'
   import { useAppStore } from '../stores/globalStore'
-  import { useRouter, useRoute } from 'vue-router'
+  import IconGenres from './icons/IconGenres.vue'
+  import AccountIcon from './icons/AccountIcon.vue'
+  import ButtonSearch from './ButtonSearch.vue'
 
-  const route = useRoute()
-  const router = useRouter()
   const store = useAppStore()
 
 
+  const width = ref<number>(document.documentElement.offsetWidth) ;
+  const checkWidth = () => {
+    width.value = document.documentElement.offsetWidth;
+  }
+  window.addEventListener('resize', checkWidth)
+
+  const inputField = ref<HTMLInputElement | null>(null)
   const searchValue = ref<string>('')
+  const isSearchShow = ref<boolean>(false)
 
   function openMovie(movie: IMovie): void {
     store.activeMovie = movie;
@@ -93,6 +120,20 @@
       searchValue.value = ''
     }
   }
+
+  function closeSearch() {
+    isSearchShow.value = false;
+    searchValue.value = ''
+
+  }
+
+
+
+
+  function searchShow(){
+    isSearchShow.value = true;
+  }
+
   const props = defineProps<{
     filtredMovies: IMovie[] | null
   }>()
@@ -101,6 +142,11 @@
   function openGenresView() {
     store.isGenreOpened = false
   }
+onMounted(() => {
+  console.log(inputField.value);
+  inputField.value?.focus;
+
+})
 
 
 </script>
@@ -132,7 +178,7 @@
 .nav__search {
   padding: 12px 16px 12px 52px;
   border: none;
-  flex-grow: 1;
+  width: 100%;
   max-width: 559px;
   border-radius: 8px;
   background-color: var(--background-secondary);
@@ -153,13 +199,17 @@
   position: absolute;
   right: 18px;
 }
+.search-group {
+  max-width: 559px;
+  flex-grow: 1;
+}
 .filtred-modal {
   position: absolute;
   border-radius: 8px;
   top: 65px;
   right: 0;
-  width: 559px;
-  min-height: 300px;
+  width: 100%;
+  min-height: 50px;
   background: var(--background-secondary);
 }
 .filtred__item {
@@ -201,6 +251,81 @@
   font-size: 18px;
   white-space: break-spaces;
 }
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+}
 
+.filtred-enter-active,
+.filtred-leave-active {
+  transition: all 0.5s ease;
+}
 
+.filtred-enter-from,
+.filtred-leave-to {
+  opacity: 0;
+  transform: translateX(100px);
+}
+.slide-down-enter-active,
+.slide-down-leave-active {
+  transition: all 1s ease;
+}
+
+.slide-down-enter-from,
+.slide-down-leave-to {
+  opacity: 0;
+  line-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .header__nav {
+    justify-content: end;
+    gap: 22px;
+    margin-right: 22px;
+    flex-shrink: 1;
+  }
+
+  .header__container {
+    flex-wrap: nowrap;
+  }
+
+  .header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+    .search-group {
+      max-width: 559px;
+      flex-grow: 0;
+    }
+    .search-group-open {
+      flex-grow: 1;
+      min-width: 335px;
+    }
+    @media (max-width: 700px) {
+      .filtred__list {
+        display: flex;
+        align-items: start;
+      }
+      .filtred__item {
+        min-width: 220px;
+      }
+      .filtred-modal {
+        overflow: hidden;
+      }
+      .filtred__img {
+        width: 158px;
+        height: 206px;
+      }
+      .filtred-container {
+        overflow-x: scroll;
+        padding-bottom: 20px;
+        margin-bottom: -20px;
+      }
+      .filtred__info-top {
+        justify-content: start;
+      }
+    }
+}
 </style>

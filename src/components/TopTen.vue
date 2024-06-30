@@ -1,14 +1,6 @@
 <template>
   <div class="top container">
-    <h2 class="top-title">Топ 10 фильмов</h2>
-    <!-- <ul class="top__list list-reset flex">
-            <li class="top__item" v-for="(movie, index) of topMovies" :key="movie.id">
-                <router-link :to="{name: 'movie', params: { id: movie.id}}" class="top__link" @click="openMoviePage(movie)">
-                    <img :src="movie.posterUrl" alt="" class="top__img">
-
-                </router-link>
-            </li>
-        </ul> -->
+    <h2 class="top-title title">Топ 10 фильмов</h2>
     <movies-list :moviesList="topMovies"></movies-list>
   </div>
 </template>
@@ -43,6 +35,9 @@ onMounted(() => {
   padding-bottom: 120px;
   color: white;
 }
+.top-title {
+  margin-bottom: 64px;
+}
 .top__list {
   column-gap: 40px;
   row-gap: 64px;
@@ -64,4 +59,10 @@ onMounted(() => {
   object-fit: cover;
 }
 
+@media (max-width: 700px) {
+  .top {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
 </style>

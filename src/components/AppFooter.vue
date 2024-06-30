@@ -1,9 +1,11 @@
 <template>
   <footer class="footer container flex">
     <div class="copyright flex">
-      <p class="copyright__name">LLC «Мультимедиа Визион»</p>
-      <copyright-icon></copyright-icon>
-      <p class="copyright__reserved">Все права защищены</p>
+      <p class="copyright__name text">LLC «Мультимедиа Визион»</p>
+
+      <p class="copyright__reserved text flex">
+        <copyright-icon></copyright-icon>Все права защищены
+      </p>
     </div>
     <ul class="footer__socials socials flex list-reset">
       <li class="socials__item vk">
@@ -34,10 +36,6 @@ import TgIcon from './icons/TgIcon.vue'
 
 <style scoped>
 .footer {
-  /* position: fixed;
-  z-index: 1000;
-  width: 100%; */
-  bottom: 0;
   padding-top: 48px;
   padding-bottom: 48px;
   background: var(--background-black);
@@ -55,5 +53,31 @@ import TgIcon from './icons/TgIcon.vue'
 }
 .socials {
   column-gap: 24px;
+}
+@media (max-width: 700px) {
+  .footer {
+    padding-top: 24px;
+    padding-bottom: 24px;
+    align-items: start;
+  }
+  .copyright {
+    margin-bottom: 32px;
+  }
+  .copyright__reserved {
+    align-items: center;
+    column-gap: 14px;
+
+    font-size: 14px;
+  }
+
+  .socials {
+    transform: scale(0.665);
+    align-items: start;
+  }
+  @media (max-width: 500px) {
+    .copyright__name {
+      margin-bottom: 8px;
+    }
+  }
 }
 </style>

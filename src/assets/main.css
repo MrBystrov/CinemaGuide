@@ -1,4 +1,5 @@
 @import './base.css';
+@import './media.css';
 
 .nav__item {
   border-bottom: 1.5px solid transparent;
@@ -25,7 +26,7 @@
 }
 
 .socials__link path {
-  transition: fill 0.3s;
+  transition: fill 1.0s;
 }
 
 .socials__link:hover:not(:focus-visible) {
@@ -61,6 +62,8 @@
 }
 .link-active {
   position: relative;
+
+
 }
 .link-active:after {
   content: '';
@@ -111,4 +114,14 @@
 }
 .modal-container body {
   overflow: hidden;
+}
+
+.page-opacity-enter-active,
+.page-opacity-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.page-opacity-enter-from,
+.page-opacity-leave-to {
+  opacity: 0;
 }

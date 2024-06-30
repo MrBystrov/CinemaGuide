@@ -5,16 +5,30 @@
       <ul class="account__menu list-reset flex">
         <li class="account__menu-item ">
           <router-link :to="{name: 'favorite'}" activeClass='link-active '
-            class="account__menu-link favorite-item">Избранные
-            фильмы</router-link>
+            class="account__menu-link favorite-item">
+            <span>
+              Избранные фильмы
+            </span>
+            <span>
+              Избранное
+            </span>
+          </router-link>
         </li>
         <li class="account__menu-item ">
           <router-link :to="{ name: 'settings' }" activeClass='link-active'
-            class="account__menu-link settings-item">Настройка
-            аккаунта</router-link>
+            class="account__menu-link settings-item">
+            <span>
+              Настройка аккаунта
+            </span>
+            <span>Настройки</span>
+          </router-link>
         </li>
       </ul>
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Transition name="page-opacity" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
     </div>
   </div>
 </template>

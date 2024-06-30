@@ -1,21 +1,26 @@
 <template>
-  <ul class="movies__list list-reset flex movie__list">
-    <li class="movie__item" v-for="(movie, index) of moviesList" :key="movie.id">
-      <router-link class="movie__link" :to="{ name: 'movie', params: { id: movie.id } }"
-        @click="store.openMovie(movie)">
-        <img :src="movie.posterUrl" :alt="movie.title">
-        <span class="top__number" v-if="route.path === '/main'"> {{ index + 1 }} </span>
-      </router-link>
-      <button-close className="btn-close remove-btn" v-if="route.path === '/account/favorite'"
-        @click="store.removeFavorite(movie.id), emit('remove-favorite')"></button-close>
-    </li>
-  </ul>
+  <div class="movies-wrapper">
+    <div class="movies-container">
+      <TransitionGroup tag="ul" name="page-opacity" class="movies__list list-reset flex movie__list">
+        <li class="movie__item" v-for="(movie, index) of moviesList" :key="movie.id">
+          <router-link class="movie__link" :to="{ name: 'movie', params: { id: movie.id } }"
+            @click="store.openMovie(movie)">
+            <img :src="movie.posterUrl" :alt="movie.title">
+            <span class="top__number" v-if="route.path === '/main'"> {{ index + 1 }} </span>
+          </router-link>
+          <button-close className="btn-close remove-btn" v-if="route.path === '/account/favorite'"
+            @click="store.removeFavorite(movie.id), emit('remove-favorite')"></button-close>
+        </li>
+      </TransitionGroup>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import type { IMovie } from '../types/IMovie';
+
 import { useAppStore } from '../stores/globalStore';
 import ButtonClose from '../components/icons/ButtonClose.vue'
 import { useRoute } from 'vue-router';
@@ -26,7 +31,7 @@ const route = useRoute()
 
 const props = defineProps<{
   moviesList: IMovie[] | null,
-  
+
 }>()
 
 
@@ -84,5 +89,27 @@ const emit = defineEmits([
   font-size: 24px;
   line-height: 133%;
   color: var(--background-brand-active);
+}
+
+@media (max-width: 700px) {
+
+  .movies__list {
+    padding-top: 20px;
+    flex-wrap: nowrap;
+  }
+  .movie__item {
+    flex-shrink: 0;
+  }
+  .movies-wrapper {
+    overflow: hidden;
+    margin-right: -20px;
+  }
+  .movies-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: scroll;
+
+    padding-bottom: 20px;
+    margin-bottom: -20px;
+  }
 }
 </style>
