@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IMovie } from '@/types/IMovie'
 import type IUser from '@/types/IUser'
@@ -17,7 +17,9 @@ export const useAppStore = defineStore('global-store', () => {
   function openMovie(movie: IMovie): void {
     activeMovie.value = movie;
     isOpenedMovie.value = true;
+    localStorage.setItem('currentMovie', JSON.stringify(movie))
 }
+
 
   const clientWidth = document.documentElement.clientWidth;
 
@@ -38,6 +40,18 @@ export const useAppStore = defineStore('global-store', () => {
     isModalOpen.value = true
   }
 
+  // ПРоверка размера окна
+  const width = ref<number>(document.documentElement.offsetWidth) ;
+  const checkWidth = () => {
+    width.value = document.documentElement.offsetWidth;
+  }
+
+  const currentPath = ref<string>('')
+
+  function setCurrentPath(path: string): void {
+    currentPath.value = path
+    localStorage.setItem('path', currentPath.value)
+  }
 
 
   // Закрытие модального
@@ -104,6 +118,6 @@ export const useAppStore = defineStore('global-store', () => {
 
   return { isGenreOpened, activeMovie, openMovie, isOpenedMovie, isModalOpen, isTrailerOpen, modalType, authError,
     currentUser,  isAuthorised, openModal, closeModal, modalSecondPress, showAcc, addFavorite,
-     removeFavorite, closeAccount, clientWidth
+     removeFavorite, closeAccount, clientWidth, checkWidth, width, currentPath, setCurrentPath
      }
 })

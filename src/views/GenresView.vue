@@ -1,39 +1,41 @@
 <template>
   <div class="genres">
     <div class="genres-container container">
-      <!-- <Transition name="page-opacity"> -->
-        <div class="genres__content" v-if="!store.isGenreOpened">
-          <h2 class="genres__title">Жанры фильмов</h2>
-          <TransitionGroup tag="ul" name="page-opacity" class="genres__list flex list-reset">
-            <li class="genres__item" v-for="genre of genresPicture" :key="genre"
-              :style="{ backgroundImage: `url(${Object.values(genre)[0]})` }">
-              <router-link :to="{ name: 'genre', params: { genre: Object.keys(genre)[0] } }" class="genres__link"
-                @click="openGenreView">
-                <h3 class="genre__title title">{{ Object.keys(genre)[0] }}</h3>
-              </router-link>
-            </li>
-          </TransitionGroup>
-        </div>
-        <RouterView v-else />
-      <!-- </Transition> -->
+      <div class="genres__content" v-if="!store.isGenreOpened">
+        <h2 class="genres__title title">Жанры фильмов</h2>
+        <TransitionGroup tag="ul" name="page-opacity" class="genres__list flex list-reset">
+          <li
+            class="genres__item"
+            v-for="(genre, index) of genresPicture"
+            :key="index"
+            :style="{ backgroundImage: `url(${Object.values(genre)[0]})` }"
+          >
+            <router-link
+              :to="{ name: 'genre', params: { genre: Object.keys(genre)[0] } }"
+              class="genres__link"
+              @click="openGenreView()"
+            >
+              <h3 class="genre__title title">{{ Object.keys(genre)[0] }}</h3>
+            </router-link>
+          </li>
+        </TransitionGroup>
+      </div>
+      <RouterView v-else />
     </div>
   </div>
 </template>
 
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { onMounted } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue'
 import { getMoviesList } from '../api/getMoviesList'
 import { useAppStore } from '../stores/globalStore'
-import { useRoute } from 'vue-router'
-
-const store = useAppStore()
 const route = useRoute()
+const store = useAppStore()
 
 const genres = ref<string[] | null>(null)
-const genresPicture = ref([])
+const genresPicture = ref<Object[]>([])
 
 store.isGenreOpened = false
 async function updateGenresPage() {
@@ -47,17 +49,21 @@ async function updateGenresPage() {
       const random = Math.round(Math.random() * 50)
 
       genresPicture.value.push({ [item]: response[random].posterUrl })
-
     })
   }
 }
 updateGenresPage()
 
-console.log(genresPicture.value)
-
-function openGenreView(gen: string): void {
+function openGenreView(): void {
   store.isGenreOpened = true
 }
+
+onMounted(() => {
+  if(route.params.genre) {
+    store.isGenreOpened = true
+  }
+})
+
 </script>
 
 
@@ -72,6 +78,7 @@ function openGenreView(gen: string): void {
   padding-top: 160px;
 }
 .genres__title {
+  margin-bottom: 64px;
   font-family: var(--font-family);
   font-weight: 700;
   font-size: 48px;
@@ -124,8 +131,12 @@ function openGenreView(gen: string): void {
   .genres {
     padding-top: 80px;
   }
+  .genres__list {
+    gap: 24px;
+  }
   .genres__title {
     font-size: 24px;
+    margin-bottom: 40px;
   }
 }
 </style>

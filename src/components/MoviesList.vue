@@ -1,8 +1,9 @@
 <template>
   <div class="movies-wrapper">
     <div class="movies-container">
-      <TransitionGroup tag="ul" name="page-opacity" class="movies__list list-reset flex movie__list">
-        <li class="movie__item" v-for="(movie, index) of moviesList" :key="movie.id">
+      <TransitionGroup tag="ul" name="page-opacity" :class="{column: route.params.genre}" class="movies__list list-reset flex movie__list"
+        >
+        <li class="movie__item" v-for="(movie, index) of moviesList" :key="movie.id" :class="{'column': route.params.genre}" >
           <router-link class="movie__link" :to="{ name: 'movie', params: { id: movie.id } }"
             @click="store.openMovie(movie)">
             <img :src="movie.posterUrl" :alt="movie.title">
@@ -17,34 +18,26 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import type { IMovie } from '../types/IMovie';
 
 import { useAppStore } from '../stores/globalStore';
 import ButtonClose from '../components/icons/ButtonClose.vue'
 import { useRoute } from 'vue-router';
+
 const store = useAppStore()
 const route = useRoute()
 
 
 
 const props = defineProps<{
-  moviesList: IMovie[] | null,
-
+  moviesList: IMovie[]
 }>()
-
 
 const emit = defineEmits([
   'remove-favorite'
 ])
-
-
-
 </script>
-
-
-
 
 <style scoped>
 .movies__list {
@@ -110,6 +103,11 @@ const emit = defineEmits([
 
     padding-bottom: 20px;
     margin-bottom: -20px;
+  }
+  .column {
+    flex-direction: column;
+    min-height: 502px;
+    width: 335px;
   }
 }
 </style>

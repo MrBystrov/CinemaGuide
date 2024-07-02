@@ -3,7 +3,13 @@
     <div class="auth flex">
       <main-logo width="180" height="36"></main-logo>
       <button-close class="btn-close" @click="store.closeModal(), resetValidator()"></button-close>
-      <TransitionGroup tag="form" id="authForm" name="authForm" class="auth__form flex" @submit.prevent="authSend()">
+      <TransitionGroup
+        tag="form"
+        id="authForm"
+        name="authForm"
+        class="auth__form flex"
+        @submit.prevent="authSend()"
+      >
         <h3 class="auth__title title" v-if="store.modalType !== 'login'">
           Регистрация <span v-if="store.modalType === 'success'"> завершена</span>
         </h3>
@@ -11,20 +17,49 @@
           Используйте вашу электронную почту для входа
         </p>
         <TransitionGroup tag="div" class="auth__inputs flex" name="inputs">
-          <input type="text" :class="{ 'is-invalid': v$.inputMail.$errors.length && store.modalType === 'register' }"
-            class="auth__mail auth__input" v-if="store.modalType !== 'success'" v-model="v$.inputMail.$model"
-            placeholder="Электронная почта" />
-          <input type="text" :class="{ 'is-invalid': v$.inputName.$errors.length }" class="auth__name auth__input"
-            placeholder="Имя" v-model="v$.inputName.$model" v-if="store.modalType === 'register'" />
-          <input type="text" :class="{ 'is-invalid': v$.inputSurname.$errors.length }" class="auth__surname auth__input"
-            placeholder="Фамилия" v-model="v$.inputSurname.$model" v-if="store.modalType === 'register'" />
-          <input name="password" type="password" :class="{
+          <input
+            type="text"
+            :class="{ 'is-invalid': v$.inputMail.$errors.length && store.modalType === 'register' }"
+            class="auth__mail auth__input"
+            v-if="store.modalType !== 'success'"
+            v-model="v$.inputMail.$model"
+            placeholder="Электронная почта"
+          />
+          <input
+            type="text"
+            :class="{ 'is-invalid': v$.inputName.$errors.length }"
+            class="auth__name auth__input"
+            placeholder="Имя"
+            v-model="v$.inputName.$model"
+            v-if="store.modalType === 'register'"
+          />
+          <input
+            type="text"
+            :class="{ 'is-invalid': v$.inputSurname.$errors.length }"
+            class="auth__surname auth__input"
+            placeholder="Фамилия"
+            v-model="v$.inputSurname.$model"
+            v-if="store.modalType === 'register'"
+          />
+          <input
+            name="password"
+            type="password"
+            :class="{
               'is-invalid': v$.inputPassword.$errors.length && store.modalType === 'register'
-            }" class="auth__password auth__input" v-if="store.modalType !== 'success'"
-            v-model="v$.inputPassword.$model" placeholder="Пароль" />
-          <input type="password" class="auth__password-conf auth__input"
-            :class="{ 'is-invalid': v$.inputPasswordConf.$errors.length }" placeholder="Подтвердите пароль"
-            v-model="v$.inputPasswordConf.$model" v-if="store.modalType === 'register'" />
+            }"
+            class="auth__password auth__input"
+            v-if="store.modalType !== 'success'"
+            v-model="v$.inputPassword.$model"
+            placeholder="Пароль"
+          />
+          <input
+            type="password"
+            class="auth__password-conf auth__input"
+            :class="{ 'is-invalid': v$.inputPasswordConf.$errors.length }"
+            placeholder="Подтвердите пароль"
+            v-model="v$.inputPasswordConf.$model"
+            v-if="store.modalType === 'register'"
+          />
         </TransitionGroup>
         <p class="auth-error" v-if="store.modalType === 'login' && store.authError">
           Введите правильные данные или зарегистрируйтесь
@@ -32,8 +67,12 @@
         <button type="submit" class="btn btn-enter modal-main-btn">
           {{ store.modalType === 'register' ? 'Создать аккаунт' : 'Войти' }}
         </button>
-        <button type="button" class="btn btn-register modal-sec-btn" v-if="store.modalType !== 'success'"
-          @click="store.modalSecondPress(), resetValidator()">
+        <button
+          type="button"
+          class="btn btn-register modal-sec-btn"
+          v-if="store.modalType !== 'success'"
+          @click="store.modalSecondPress(), resetValidator()"
+        >
           {{ store.modalType === 'register' ? 'У меня есть пароль' : 'Регистрация' }}
         </button>
       </TransitionGroup>
@@ -42,17 +81,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { reactive} from 'vue'
 import MainLogo from './icons/MainLogo.vue'
 import ButtonClose from './icons/ButtonClose.vue'
 import { useAppStore } from '../stores/globalStore'
-import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email, minLength, sameAs } from '@vuelidate/validators'
+import { required, email, minLength } from '@vuelidate/validators'
 
 const store = useAppStore()
-const router = useRouter()
-
 
 const formData = reactive({
   inputMail: '',
@@ -61,8 +97,6 @@ const formData = reactive({
   inputPassword: '',
   inputPasswordConf: ''
 })
-
-
 
 const rules = {
   inputName: {
@@ -85,7 +119,6 @@ const v$ = useVuelidate(rules, formData)
 
 // Функция авторизации и регистрации
 async function authSend() {
-
   v$.value.$touch()
   if (store.modalType === 'register') {
     if (!v$.value.$silentErrors.length) {
@@ -133,6 +166,7 @@ async function authSend() {
     store.modalType = 'login'
   }
 }
+
 function resetValidator() {
   v$.value.$reset()
 }
@@ -238,7 +272,6 @@ function resetValidator() {
   text-align: center;
 }
 
-
 .authForm-enter-active,
 .authForm-leave-active {
   transition: all 0.5s ease;
@@ -260,7 +293,14 @@ function resetValidator() {
   opacity: 0;
   transform: translateX(40px);
 }
-
-
-
+@media (max-width: 700px) {
+  .auth {
+    padding: 64px 20px 32px;
+    max-width: 335px;
+  }
+  .btn-close {
+    top: 20px;
+    right: 20px;
+  }
+}
 </style>

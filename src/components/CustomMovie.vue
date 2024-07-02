@@ -6,7 +6,7 @@
         <li class="movie__info-rating flex" :class="{
                 'rating-gold': customMovie?.tmdbRating > 8,
                 'rating-green': customMovie?.tmdbRating < 8 && customMovie?.tmdbRating >= 7,
-                'rating-gray': customMovie?.tmdbRating < 7 && customMovie?.tmdbRating >= 5,
+                'rating-gray': customMovie?.tmdbRating < 7 && customMovie?.tmdbRating  >= 5,
                 'rating-red': customMovie?.tmdbRating < 5
               }">
           <rating-star></rating-star>
@@ -20,13 +20,13 @@
             }}&nbsp;</span>
         </li>
         <li>
-          <span class="movie__info-item movie__info-duration">{{ corecteDuration(customMovie?.runtime) }}</span>
+          <span class="movie__info-item movie__info-duration">{{ corecteDuration(Number(customMovie?.runtime)) }}</span>
         </li>
       </ul>
       <h2 class="movie__title">{{ customMovie?.title }}</h2>
       <p class="movie__description">{{ customMovie?.plot }}</p>
       <div class="movie__buttons flex">
-        <button class="movie__buttons-trailer btn" @click="store.isTrailerOpen = true">
+        <button class="movie__buttons-trailer btn" :class="{ 'btn-trailer-movieview': store.isOpenedMovie}" @click="store.isTrailerOpen = true">
           Трейлер
         </button>
         <button class="movie__buttons-about btn custom-movie-btn" v-if="!store.isOpenedMovie"
@@ -35,25 +35,25 @@
         </button>
         <favorite-btn :class="{
                 'in-favorites': store.currentUser?.favorites?.includes(String(customMovie?.id))
-              }" @click="store.isAuthorised ? changeFavorite(customMovie?.id) : store.openModal()"></favorite-btn>
+              }" @click="store.isAuthorised ? changeFavorite(Number(customMovie?.id)) : store.openModal()"></favorite-btn>
         <button-refresh @click="emit('click-refresh')" v-if="!store.isOpenedMovie"></button-refresh>
       </div>
     </div>
-    <div class="trailer-container" v-if="store.isTrailerOpen">
-      <div class="trailer-modal">
-        <iframe class="trailer-modal-movie" width="900" height="600"
-          :src="'https://www.youtube.com/embed/' + customMovie?.trailerYouTubeId" frameborder="0" autoplay="true"
-          allowfullscreen>
-        </iframe>
-        <button-close class="trailer-close btn-close" @click="store.isTrailerOpen = false"></button-close>
+    <Transition name="page-opacity">
+      <div class="trailer-container" v-if="store.isTrailerOpen">
+        <div class="trailer-modal">
+          <iframe class="trailer-modal-movie" width="900" height="600"
+            :src="'https://www.youtube.com/embed/' + customMovie?.trailerYouTubeId" frameborder="0" autoplay="true"
+            allowfullscreen>
+          </iframe>
+          <button-close class="trailer-close btn-close" @click="store.isTrailerOpen = false"></button-close>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { ref } from 'vue'
 import RatingStar from './icons/RatingStar.vue'
 import FavoriteBtn from './icons/FavoriteBtn.vue'
 import ButtonRefresh from './icons/ButtonRefresh.vue'
@@ -66,20 +66,18 @@ import ButtonClose from './icons/ButtonClose.vue'
 const store = useAppStore()
 const router = useRouter()
 
-const currentfavorite = ref(store.currentUser?.favorites)
-console.log(currentfavorite)
-
 const props = defineProps<{
-  customMovie: IMovie | null
+  customMovie: IMovie
 }>()
 
 const emit = defineEmits<{
   (name: 'click-refresh'): void
 }>()
 
-function openMovie(movie: IMovie): void {
+function openMovie(movie: any): void {
   router.push({ name: 'movie', params: { id: movie.id } })
   store.activeMovie = movie
+  localStorage.setItem('currentMovie', JSON.stringify(movie))
   store.isOpenedMovie = true
 }
 
@@ -259,6 +257,19 @@ function changeFavorite(id: number) {
   }
   .movie__buttons-favorite, .movie__buttons-next {
     padding: 16px 18px;
+  }
+  .trailer-modal-movie {
+    max-width: 100%;
+    min-width: 370px;
+    max-height: 300px;
+  }
+  .trailer-close {
+    right: 20px;
+    top: 20px;
+  }
+  .btn-trailer-movieview {
+    min-width: 251px;
+    flex-grow: 1;
   }
 }
 </style>

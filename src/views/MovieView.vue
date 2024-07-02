@@ -44,7 +44,7 @@ import { useAppStore } from '../stores/globalStore';
 
 const store = useAppStore()
 const LangOfMovie = new Intl.DisplayNames("ru", { type: "language" }).of(`${store.activeMovie?.language}`)
-console.log(LangOfMovie);
+
 
 </script>
 
@@ -53,6 +53,7 @@ console.log(LangOfMovie);
 <style scoped>
 .about-container {
     padding-top: 40px;
+    padding-bottom: 120px;
 }
 .about__item {
     display: flex;
@@ -61,7 +62,8 @@ console.log(LangOfMovie);
     color: var(--content-primary);
 }
 .about__term {
-    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
     overflow: hidden;
     word-wrap: normal;
 }
@@ -83,5 +85,26 @@ console.log(LangOfMovie);
     font-size: 48px;
     line-height: 117%;
     color: var(--content-primary);
+}
+@media (max-width: 700px) {
+  .about-container {
+    padding-bottom: 0;
+  }
+    .about__term::after {
+      content: '';
+    }
+    .about__item {
+      flex-direction: column;
+      row-gap: 4px;
+    }
+    .about__term {
+      min-width: 0;
+      font-size: 14px;
+      line-height: 143%;
+      color: var(--content-disabled);
+    }
+    .about__description {
+      padding-left: 0;
+    }
 }
 </style>

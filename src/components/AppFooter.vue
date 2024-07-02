@@ -4,7 +4,8 @@
       <p class="copyright__name text">LLC «Мультимедиа Визион»</p>
 
       <p class="copyright__reserved text flex">
-        <copyright-icon></copyright-icon>Все права защищены
+        <copyright-icon></copyright-icon>
+        <span>Все права защищены</span>
       </p>
     </div>
     <ul class="footer__socials socials flex list-reset">
@@ -54,6 +55,9 @@ import TgIcon from './icons/TgIcon.vue'
 .socials {
   column-gap: 24px;
 }
+.copyright__reserved {
+  column-gap: 14px;
+}
 @media (max-width: 700px) {
   .footer {
     padding-top: 24px;
@@ -65,8 +69,6 @@ import TgIcon from './icons/TgIcon.vue'
   }
   .copyright__reserved {
     align-items: center;
-    column-gap: 14px;
-
     font-size: 14px;
   }
 

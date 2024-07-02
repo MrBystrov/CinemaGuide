@@ -27,76 +27,90 @@ const store = useAppStore()
 
 const pageNumber = ref<number>(1)
 
-
 const moviesByGenre = ref<IMovie[]>([])
 
 onMounted(async () => {
-    moviesByGenre.value = await getMoviesList(
-    'https://cinemaguide.skillbox.cc/movie' + '?genre=' + route.params.genre + '&count=10' + `&page=${pageNumber.value}`
-  )
+  if (store.width > 700) {
+    openByGenreMovies(15)
+  } else {
+    openByGenreMovies(5)
+  }
 })
 
+async function openByGenreMovies(num: number): Promise<IMovie[]> {
+  return (moviesByGenre.value = await getMoviesList(
+    'https://cinemaguide.skillbox.cc/movie' +
+      '?genre=' +
+      route.params.genre +
+      `&count=${num}` +
+      `&page=${pageNumber.value}`
+  ))
+}
+
 function backGenresPage() {
-    emit('click-back-genres')
-    store.isGenreOpened = false
-    router.push('/genres')
+  emit('click-back-genres')
+  store.isGenreOpened = false
+  router.push('/genres')
 }
 
 async function loadNextPage() {
   ++pageNumber.value
   const nextTen = await getMoviesList(
-    'https://cinemaguide.skillbox.cc/movie' + '?genre=' + route.params.genre + `&page=${pageNumber.value}` + '&count=10'
+    'https://cinemaguide.skillbox.cc/movie' +
+      '?genre=' +
+      route.params.genre +
+      `&page=${pageNumber.value}` +
+      '&count=10'
   )
   moviesByGenre.value = [...moviesByGenre.value, ...nextTen]
-  console.log(moviesByGenre.value);
-  console.log(nextTen);
+  console.log(moviesByGenre.value)
+  console.log(nextTen)
 }
-
-
+console.log(route.path);
 const emit = defineEmits(['click-back-genres'])
-
-
-
 </script>
-
 
 
 <style scoped>
 .genre {
-    flex-direction: column;
-    row-gap: 64px;
+  flex-direction: column;
+  row-gap: 64px;
 }
 .genre-container {
   color: var(--content-primary);
 }
 .genre__title-group {
-    align-self: start;
-    justify-content: start;
-    align-items: center;
-    column-gap: 17px;
+  align-self: start;
+  justify-content: start;
+  align-items: center;
+  column-gap: 17px;
 }
 
 .genre__title {
-
-    align-items: center;
-    font-weight: 700;
-    font-size: 48px;
-    line-height: 117%;
-    color: var(--content-primary);
-    text-transform: capitalize;
+  align-items: center;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 117%;
+  color: var(--content-primary);
+  text-transform: capitalize;
 }
 .genre__btn-more {
-    padding: 16px 48px;
-    background: var(--background-brand-active);
-    border-radius: 28px;
-    color: var(--content-primary);
-    align-self: center;
+  padding: 16px 48px;
+  background: var(--background-brand-active);
+  border-radius: 28px;
+  color: var(--content-primary);
+  align-self: center;
 }
 
 @media (max-width: 700px) {
+  .genre {
+    align-items: start;
+  }
   .genre__title {
     font-size: 24px;
   }
-  
+  .movies__list {
+    color: red;
+  }
 }
 </style>

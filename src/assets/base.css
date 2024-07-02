@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'Play';
+  src: url('./fonts/Play-Bold.woff2') format('woff2'),
+    url('./fonts/Play-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Play';
+  src: url('./fonts/Play-Regular.woff2') format('woff2'),
+    url('./fonts/Play-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 
 :root {
   --background-white: #fff;
@@ -14,6 +32,7 @@
   --background-disabled: rgba(255, 255, 255, 0.5);
   --content-disabled: rgba(255, 255, 255, 0.5);
   --content-primary: #fff;
+  --font-family: "Play", sans-serif;
 }
 
 html {
@@ -30,7 +49,7 @@ html {
 body {
   width: 100%;
   margin: 0;
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-family: var(--font-family);
   font-weight: 400;
   font-size: 18px;
   background-color: var(--background-black);

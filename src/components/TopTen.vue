@@ -6,19 +6,15 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from '../stores/globalStore'
-import { RouterLink } from 'vue-router'
 import type { IMovie } from '../types/IMovie'
 import MoviesList from './MoviesList.vue'
 import { onMounted, ref } from 'vue'
 import { getMoviesList } from '../api/getMoviesList'
 
-const store = useAppStore()
+const topMovies = ref<IMovie[]>([])
 
-const topMovies = ref<IMovie[] | null>(null)
-
-async function updateTopMovies() {
-  topMovies.value = await getMoviesList('https://cinemaguide.skillbox.cc/movie/top10')
+async function updateTopMovies(): Promise<IMovie[]> {
+  return topMovies.value = await getMoviesList('https://cinemaguide.skillbox.cc/movie/top10')
 }
 
 onMounted(() => {
