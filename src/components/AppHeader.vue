@@ -1,13 +1,13 @@
 <template>
   <header class="header">
     <div class="container header__container flex">
-      <router-link to="/main" class="header__logo" v-if="!isSearchShow">
+      <router-link to="/" class="header__logo" v-if="!isSearchShow">
         <header-logo></header-logo>
       </router-link>
       <nav class="header__nav nav flex">
         <ul class="nav__list list-reset flex" v-if="!isSearchShow">
           <li class="nav__item">
-            <router-link activeClass="link-active" to="/main" v-if="store.width > 1100">Главная</router-link>
+            <router-link activeClass="link-active" to="/" v-if="store.width > 1100">Главная</router-link>
           </li>
           <li class="nav__item">
             <router-link activeClass="link-active" to="/genres" @click="openGenresView">

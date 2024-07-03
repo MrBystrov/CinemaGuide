@@ -2,6 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { IMovie } from '@/types/IMovie'
 import type IUser from '@/types/IUser'
+import { useRoute } from 'vue-router'
 
 
 export const useAppStore = defineStore('global-store', () => {
@@ -110,6 +111,7 @@ export const useAppStore = defineStore('global-store', () => {
     isAuthorised.value = false
     currentUser.value = null
     localStorage.removeItem('currentUser')
+    router.push('/')
   }
 
 

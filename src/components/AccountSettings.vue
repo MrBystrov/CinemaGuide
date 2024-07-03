@@ -39,7 +39,7 @@ const router = useRouter()
 const store = useAppStore()
 
 function toMain() {
-  router.push('/main')
+  router.push('/')
 }
 </script>
 

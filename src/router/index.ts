@@ -5,7 +5,7 @@ const router = createRouter({
   history: createWebHashHistory('/'),
   routes: [
     {
-      path: '/main',
+      path: '/',
       name: 'main',
       component:() => import('../views/MainView.vue')
     },
